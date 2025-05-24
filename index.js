@@ -28,12 +28,53 @@ async function run() {
     await client.connect();
     
     const plantsCollection = client.db("plantDB").collection("plants")
-
+    
     app.get('/plants',async(req,res) =>{
 
-      const result = await plantsCollection.find().toArray();
+      const result = await plantsCollection.find() .toArray();
       res.send(result)
       
+    })
+    app.get('/plants/new',async(req,res) =>{
+
+      const result = await plantsCollection.find().sort({ _id: -1 }).limit(6).toArray();
+      res.send(result)
+      
+    })
+
+    app.get('/plants/:id',async(req,res) =>{
+      const id = req.params.id;
+      const query ={_id: new ObjectId(id)}
+      const result = await plantsCollection.findOne(query)
+      res.send(result)
+    })
+
+app.get('/plants/email/:email', async (req, res) => {
+  const email = req.params.email;
+  const query = { userEmail: email };
+  const result = await plantsCollection.find(query).toArray(); 
+  res.send(result);
+});
+
+    //update
+    app.put('/plants/:id',async (req,res) => {
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id)}
+      const options = { upsert: true };
+      const updatedPlants = req.body
+      const updatDoc = {
+        $set: updatedPlants
+      }
+      const result = await plantsCollection.updateOne(filter,updatDoc,options)
+      res.send(result)
+    })
+
+        //delete
+    app.delete("/plants/:id",async(req,res) =>{
+      const id = req.params.id
+      const query = {_id: new ObjectId(id)}
+      const result = await plantsCollection.deleteOne(query)
+      res.send(result) 
     })
 
     app.post("/plants", async(req,res) =>{
