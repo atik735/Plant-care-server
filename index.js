@@ -36,7 +36,6 @@ async function run() {
       
     })
     app.get('/plants/new',async(req,res) =>{
-
       const result = await plantsCollection.find().sort({ _id: -1 }).limit(6).toArray();
       res.send(result)
       
@@ -54,7 +53,7 @@ app.get('/plants/email/:email', async (req, res) => {
   const query = { userEmail: email };
   const result = await plantsCollection.find(query).toArray(); 
   res.send(result);
-  
+
 });
 
     //update
