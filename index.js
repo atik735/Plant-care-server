@@ -69,6 +69,7 @@ app.get('/plants/email/:email', async (req, res) => {
       res.send(result)
     })
 
+    
         //delete
     app.delete("/plants/:id",async(req,res) =>{
       const id = req.params.id
