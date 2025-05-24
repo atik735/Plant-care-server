@@ -54,6 +54,7 @@ app.get('/plants/email/:email', async (req, res) => {
   const query = { userEmail: email };
   const result = await plantsCollection.find(query).toArray(); 
   res.send(result);
+  
 });
 
     //update
@@ -69,7 +70,7 @@ app.get('/plants/email/:email', async (req, res) => {
       res.send(result)
     })
 
-    
+
         //delete
     app.delete("/plants/:id",async(req,res) =>{
       const id = req.params.id
