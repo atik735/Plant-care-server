@@ -23,13 +23,31 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
     const plantsCollection = client.db("plantDB").collection("plants");
 
-    app.get("/plants", async (req, res) => {
-      const result = await plantsCollection.find().toArray();
-      res.send(result);
-    });
+
+  app.get("/plants",async(req,res) =>{
+    const {searchParams} = req.query
+
+    let sortField ={}
+
+  if (searchParams === "nextWatering") {
+    sortField = { nextWatering: 1 }; // ascending
+  }
+  else if (searchParams === "careLevel") {
+    sortField = { careLevel: 1 }; // ascending
+  }
+  
+    const result = await plantsCollection.find().sort(sortField).toArray();
+    res.send(result)
+  })
+
+    // app.get("/plants", async (req, res) => {
+    //   const result = await plantsCollection.find().toArray();
+    //   res.send(result);
+    // });
+    
     app.get("/plants/new", async (req, res) => {
       const result = await plantsCollection
         .find()
@@ -85,7 +103,7 @@ async function run() {
     });
 
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
+    // await client.db("admin").command({ ping: 1 });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
